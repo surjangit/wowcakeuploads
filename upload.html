@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Products</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #d35400;
+      --light: #fdf6f0;
+      --dark: #2c3e50;
+      --gray: #95a5a6;
+      --border: #e0e0e0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #fafafa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* Header & Nav */
+    header {
+      background: white;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-section, .preview-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.8rem;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin-bottom: 1.2rem;
+      color: var(--dark);
+      font-size: 1.4rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+
+    input[type="number"] {
+      width: 100%;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #b04400;
+    }
+
+    #copyBtn, #emailBtn {
+      width: 100%;
+      margin-top: 0.8rem;
+    }
+
+    #copyBtn {
+      background: #27ae60;
+    }
+    #copyBtn:hover {
+      background: #219653;
+    }
+
+    #emailBtn {
+      background: #3498db;
+    }
+    #emailBtn:hover {
+      background: #2980b9;
+    }
+
+    /* Preview Grid */
+    .preview-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .preview-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      background: var(--light);
+      position: relative;
+    }
+
+    .preview-card h4 {
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .preview-card p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+
+    .preview-card img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      background: #eee;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+    /* Responsive Nav */
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: left 0.4s ease;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .container {
+        padding: 0 1rem;
+        margin-top: 1rem;
+      }
+
+      .form-section, .preview-section {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo">🍰 Wow Cakes</div>
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="#"><i class="fas fa-plus-circle"></i> Add Product</a>
+        <a href="#"><i class="fas fa-info-circle"></i> Help</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="form-section">
+      <h2><i class="fas fa-edit"></i> Add New Product</h2>
+      <div class="form-group">
+        <label for="name">Product Name</label>
+        <input type="text" id="name" placeholder="e.g. Chocolate Dream Cake" required>
+      </div>
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input type="text" id="price" placeholder="e.g. ₹850" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight <small>(default: 500g)</small></label>
+        <input type="text" id="weight" value="500g" placeholder="e.g. 500g, 1kg">
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating <small>(default: 4.5)</small></label>
+        <input type="number" id="rating" step="0.1" min="0" max="5" value="4.5" placeholder="e.g. 4.5">
+      </div>
+      <div class="form-group">
+        <label for="image">Image Path (relative)</label>
+        <input type="text" id="image" placeholder="e.g. images/choc-dream.jpg" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" rows="3" placeholder="Short description..."></textarea>
+      </div>
+      <button id="addProductBtn"><i class="fas fa-plus"></i> Add to List</button>
+    </div>
+
+    <div class="preview-section">
+      <h2><i class="fas fa-eye"></i> Live Preview & Actions</h2>
+      <div class="preview-grid" id="previewGrid">
+        <!-- Preview cards will appear here -->
+      </div>
+      <button id="copyBtn"><i class="fas fa-copy"></i> Copy PRODUCTS Array</button>
+      <button id="emailBtn"><i class="fas fa-envelope"></i> Send by Email</button>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Use localStorage key
+    const STORAGE_KEY = 'wow_cake_products_temp';
+    
+    // Helper: Generate random 5-digit ID
+    function generateRandomId() {
+      return Math.floor(10000 + Math.random() * 90000); // 10000 to 99999
+    }
+
+    // Load products from localStorage or start fresh
+    let products = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    const nameInput = document.getElementById('name');
+    const priceInput = document.getElementById('price');
+    const weightInput = document.getElementById('weight');
+    const ratingInput = document.getElementById('rating');
+    const imageInput = document.getElementById('image');
+    const descInput = document.getElementById('description');
+    const addBtn = document.getElementById('addProductBtn');
+    const previewGrid = document.getElementById('previewGrid');
+    const copyBtn = document.getElementById('copyBtn');
+    const emailBtn = document.getElementById('emailBtn');
+
+    // Toggle mobile menu
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('active');
+    });
+
+    // Save products to localStorage
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    }
+
+    // Render all preview cards
+    function renderAllPreviews() {
+      previewGrid.innerHTML = '';
+      products.forEach((product, index) => {
+        const card = document.createElement('div');
+        card.className = 'preview-card';
+        card.dataset.index = index;
+
+        const fullStars = Math.floor(product.rating);
+        const hasHalf = product.rating % 1 >= 0.5;
+        let starsHTML = '';
+        for (let i = 0; i < 5; i++) {
+          if (i < fullStars) starsHTML += '★';
+          else if (i === fullStars && hasHalf) starsHTML += '½';
+          else starsHTML += '☆';
+        }
+
+        card.innerHTML = `
+          <button class="delete-btn" title="Remove this product">×</button>
+          <h4>${product.name} <small>(ID: ${product.id})</small></h4>
+          <p><strong>Price:</strong> ${product.price}</p>
+          <p><strong>Weight:</strong> ${product.weight}</p>
+          <p><strong>Rating:</strong> ${starsHTML} (${product.rating})</p>
+          <p>${product.description || '—'}</p>
+          <img src="${product.image}" alt="${product.name}">
+        `;
+
+        card.querySelector('.delete-btn').addEventListener('click', () => {
+          const idx = parseInt(card.dataset.index);
+          products.splice(idx, 1);
+          saveToStorage();
+          renderAllPreviews();
+        });
+
+        previewGrid.appendChild(card);
+      });
+    }
+
+    // Add product
+    addBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const price = priceInput.value.trim();
+      const weight = weightInput.value.trim() || "500g";
+      const rating = parseFloat(ratingInput.value) || 4.5;
+      const image = imageInput.value.trim();
+      const description = descInput.value.trim();
+
+      if (!name || !price || !image) {
+        alert('Please fill in Name, Price, and Image path.');
+        return;
+      }
+
+      const newProduct = {
+        id: generateRandomId(), // ✅ 5-digit random ID
+        name,
+        price,
+        weight,
+        rating,
+        image,
+        description
+      };
+
+      products.push(newProduct);
+      saveToStorage(); // ✅ Save to localStorage
+      renderAllPreviews();
+
+      // Reset form
+      nameInput.value = '';
+      priceInput.value = '';
+      weightInput.value = '500g';
+      ratingInput.value = '4.5';
+      imageInput.value = '';
+      descInput.value = '';
+      nameInput.focus();
+    });
+
+    // Copy array
+    copyBtn.addEventListener('click', () => {
+      if (products.length === 0) {
+        alert('No products to copy!');
+        return;
+      }
+
+      const formattedArray = `const PRODUCTS = [\n${products.map(p =>
+        `  {\n    id: ${p.id},\n    name: "${p.name}",\n    price: "${p.price}",\n    weight: "${p.weight}",\n    rating: ${p.rating},\n    image: "${p.image}",\n    description: "${p.description.replace(/"/g, '\\"')}"\n  }`
+      ).join(',\n')}\n];`;
+
+      navigator.clipboard.writeText(formattedArray)
+        .then(() => {
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(() => copyBtn.innerHTML = originalText, 2000);
+        })
+        .catch(() => alert('Copy failed. Select manually.'));
+    });
+
+    // ✅ Email functionality
+    emailBtn.addEventListener('click', () => {
+      if (products.length === 0) {
+        alert('No products to send!');
+        return;
+      }
+
+      const formattedArray = `const PRODUCTS = [\n${products.map(p =>
+        `  {\n    id: ${p.id},\n    name: "${p.name}",\n    price: "${p.price}",\n    weight: "${p.weight}",\n    rating: ${p.rating},\n    image: "${p.image}",\n    description: "${p.description.replace(/"/g, '\\"')}"\n  }`
+      ).join(',\n')}\n];`;
+
+      const subject = encodeURIComponent("Cake Product List – Ready for index.html");
+      const body = encodeURIComponent(
+        "Hi,\n\nHere is the latest product list for wow cakes:\n\n" +
+        formattedArray +
+        "\n\nPlease paste this into index.html.\n\nThank you!"
+      );
+
+      const mailtoLink = `mailto:surjandhungal1@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = mailtoLink;
+    });
+
+    // Initial render
+    renderAllPreviews();
+  </script>
+</body>
+</html>
